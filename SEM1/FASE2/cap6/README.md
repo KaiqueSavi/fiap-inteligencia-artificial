@@ -112,6 +112,3 @@ CREATE TABLE talhoes (
 0 - Sair
 ```
 
-## 10. Observação de Segurança
-
-As credenciais do banco estão hard-coded em `banco.py` por simplicidade didática (padrão do enunciado FIAP). Em produção, o recomendado é carregá-las de variáveis de ambiente (ex.: arquivo `.env` + biblioteca `python-dotenv`) e adicionar `.env` ao `.gitignore`.
