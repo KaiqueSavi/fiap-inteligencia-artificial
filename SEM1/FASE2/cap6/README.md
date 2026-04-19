@@ -65,18 +65,23 @@ cap6/
 ## 7. Como Executar
 
 ```bash
-# 1. Dentro do diretório do projeto
-cd /Volumes/KaiqueSSD/Github/fiap-ia/SEM1/FASE2/cap6
+# 1. Entre no diretório do projeto
+cd fiap-inteligencia-artificial/SEM1/FASE2/cap6
 
-# 2. Ative o ambiente virtual (já existe em venv/)
-source venv/bin/activate          # macOS / Linux
-# venv\Scripts\activate           # Windows
+# 2. Crie o ambiente virtual
+python3 -m venv .venv           # macOS / Linux
+python -m venv .venv            # Windows
 
-# 3. Instale dependências (oracledb já deve estar instalado)
+# 3. Ative o ambiente virtual (já existe em .venv/)
+source .venv/bin/activate       # macOS / Linux
+.venv\Scripts\activate          # Windows
+
+# 4. Instale dependências (oracledb já deve estar instalado)
 pip install -r requirements.txt
 
-# 4. Execute
-python main.py
+# 5. Execute
+python3 main.py                 # macOS / Linux
+python main.py                  # Windows
 ```
 
 Se não houver rede para o Oracle da FIAP, o programa segue em **modo offline** — só as opções 8 e 9 (sincronização) ficam bloqueadas; todas as demais funcionam normalmente.
