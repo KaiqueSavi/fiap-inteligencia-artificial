@@ -1,119 +1,172 @@
-# Gestão do Agronegócio em Python
+# FIAP - Faculdade de Informática e Administração Paulista
 
-> FIAP · Graduação em IA · Python (Caps. 3–6)
-> Perdas na colheita mecanizada de cana-de-açúcar
+<p align="center">
+<a href= "https://www.fiap.com.br/"><img src="assets/logo-fiap.png" alt="FIAP - Faculdade de Informática e Admnistração Paulista" border="0" width=40% height=40%></a>
+</p>
 
-## 1. O Problema
+<br>
 
-O Brasil é líder mundial na produção de cana-de-açúcar, colhendo cerca de **620 milhões de toneladas por safra**. A colheita mecanizada — dominante hoje — ainda apresenta índices preocupantes:
+# **Monitoramento de Perdas na Colheita de Cana-de-Açúcar**
 
-| Indicador | Valor |
-|---|---|
-| Perda média mecânica | **15%** |
-| Perda média manual | **5%** |
-| Prejuízo anual estimado (SP) | **R$ 20 milhões** |
+## 👨‍🎓 Integrantes: 
+- <a href="https://www.linkedin.com/in/willian-batista-de-oliveira-silva/">Willian Batista De Oliveira Silva</a>
+- <a href="https://www.linkedin.com/in/danielcorrea-printerx/">Daniel Corrêa</a>
+- <a href="https://www.linkedin.com/in/kaique-s-16ba47206/">Kaique Savi</a>
+- <a href="https://www.linkedin.com/in/pedro-henrique-do-nascimento-b86083348">Pedro Henrique do Nascimento Souza</a> 
+- <a href="https://www.linkedin.com/visnowden">Vinícius Camargo</a>
 
-Em São Paulo, com ~3 milhões de hectares plantados e ~100 t/ha de produtividade, esse desperdício representa um prejuízo anual de R$ 20 milhões. As perdas acontecem por falhas de planejamento, escolha inadequada do momento de colher e uso subótimo das colhedoras. O produtor raramente enxerga **onde** está perdendo, **por qual motivo**, e **como comparar talhões** entre si.
+## 📜 Descrição
 
-## 2. A Solução
+# 🌱 Projeto PBL – Monitoramento de Perdas na Colheita de Cana-de-Açúcar
 
-Sistema em Python (linha de comando) que apoia o produtor a registrar, monitorar e analisar as perdas de cada talhão safra após safra. Transforma dados brutos em decisão.
+## 📌 Contexto
 
-Recursos:
+O agronegócio é um dos pilares da economia brasileira, envolvendo toda a cadeia produtiva — desde insumos até o consumo final. Dentro desse cenário, a cana-de-açúcar se destaca, com o Brasil liderando a produção mundial, atingindo cerca de **620 milhões de toneladas por safra**.
 
-1. **Cadastro de talhões** com área, tipo de colheita (manual/mecânica), produção esperada e efetiva.
-2. **Cálculo automático de perdas** em toneladas e percentual, com classificação em faixas (aceitável, atenção, crítico).
-3. **Relatório TXT** e **mini-dashboard no terminal** com destaque visual (cores ANSI) para talhões críticos.
-4. **Persistência híbrida**: JSON local (offline) + banco Oracle da FIAP (consolidação).
-5. **Consistência de entrada**: toda interação com o usuário é validada, prevenindo dados inválidos na base.
+Apesar desse alto volume, um problema relevante impacta diretamente a produtividade: **as perdas na colheita**, especialmente na mecanizada, que podem chegar a **15%**, enquanto na manual ficam em torno de 5%. Esse desperdício representa prejuízos significativos, como cerca de **R$ 20 milhões anuais apenas no estado de São Paulo**.
 
-## 3. Cobertura dos Capítulos 3–6
+---
 
-| Capítulo | Conteúdo | Onde aparece |
-|---|---|---|
-| **3** | Subalgoritmos: funções com passagem de parâmetros | `funcoes.py` (`calcular_percentual_perda`, `classificar_talhao`, `ler_float_positivo`, `exibir_talhao`) |
-| **4** | Estruturas de dados: lista, tupla, dicionário | Talhão = **dicionário**; tabela em memória = **lista de dicionários**; faixas de classificação = **tupla imutável** |
-| **5** | Manipulação de arquivos texto e JSON | `arquivos.py` (`salvar_backup_json`, `carregar_backup_json`, `exportar_relatorio_txt`) |
-| **6** | Conexão com banco Oracle | `banco.py` (`oracledb`: INSERT, SELECT, UPDATE, DELETE na tabela `talhoes`) |
+## ❗ Problema
 
-## 4. Diferencial de Inovação
+O produtor rural, na maioria das vezes, não possui ferramentas adequadas para:
 
-- **Classificação automática por faixa**, com alerta visual verde/amarelo/vermelho no terminal.
-- **Persistência híbrida**: JSON local + Oracle na nuvem, com sincronização bidirecional entre os dois.
-- **Foco em decisão, não só cadastro**: o sistema responde "qual talhão está perdendo mais?" e destaca o pior desempenho.
+- Identificar **onde ocorrem as maiores perdas**
+- Entender **os motivos dessas perdas**
+- Comparar o desempenho entre diferentes talhões
+- Tomar decisões baseadas em dados
 
-## 5. Fluxo de Uso do Produtor
+Isso dificulta a otimização do processo produtivo e reduz a eficiência da colheita.
 
-```
-Abre o sistema → Menu principal → Cadastra talhões da safra →
-Lança produção colhida → Sistema calcula perdas e classifica →
-Gera relatório em TXT → Salva backup em JSON → Sincroniza com Oracle
-```
+---
 
-## 6. Estrutura do Projeto
+## 💡 Solução Proposta
+
+Desenvolvimento de um sistema em Python (via terminal) com foco em **gestão e análise de perdas na colheita**, atuando como uma solução no conceito de **Agrotech**.
+
+O sistema permite:
+
+- 📊 Cadastro de talhões com:
+  - Área
+  - Tipo de colheita (manual ou mecanizada)
+  - Produção esperada
+  - Produção real
+
+- 📉 Cálculo automático de perdas:
+  - Em toneladas
+  - Em percentual
+
+- 🚦 Classificação das perdas:
+  - 🟢 Aceitável  
+  - 🟡 Atenção  
+  - 🔴 Crítico  
+
+- 🖥️ Exibição de um mini-dashboard no terminal com cores ANSI
+
+- 📄 Geração de relatórios em `.txt`
+
+---
+
+## 💾 Persistência de Dados
+
+O sistema utiliza uma abordagem híbrida:
+
+- JSON local → funcionamento offline
+- Banco de dados Oracle → armazenamento estruturado e consolidação
+
+Essa estratégia permite flexibilidade e integração com ambientes maiores.
+
+---
+
+## 🧠 Validação e Consistência
+
+Todas as entradas do usuário são validadas para garantir:
+
+- Integridade dos dados
+- Evitar erros de digitação
+- Confiabilidade das análises
+
+---
+
+## ⚙️ Tecnologias e Conceitos Aplicados
+
+O projeto atende aos requisitos técnicos do PBL, utilizando:
+
+- 🔹 Subalgoritmos (funções com parâmetros)
+- 🔹 Estruturas de dados (listas, tuplas e dicionários)
+- 🔹 Manipulação de arquivos (TXT e JSON)
+- 🔹 Conexão com banco de dados Oracle
+
+---
+
+## 🚀 Diferencial
+
+O sistema não se limita ao cadastro de dados — ele atua como ferramenta de apoio à decisão:
+
+- Identifica automaticamente o **talhão com maior perda**
+- Permite comparação entre áreas
+- Transforma dados em informações úteis
+
+---
+
+## 🎯 Objetivo
+
+Auxiliar o produtor rural a:
+
+- Reduzir perdas na colheita
+- Melhorar a tomada de decisão
+- Aumentar a eficiência produtiva
+
+---
+
+## 📈 Conclusão
+
+O projeto se encaixa no contexto de inovação do agronegócio, trazendo uma solução simples, mas eficiente, alinhada ao conceito de Agrotech. Ao transformar dados operacionais em insights, contribui diretamente para a melhoria da produtividade e redução de desperdícios no setor sucroenergético.
+
+
+## 📁 Estrutura de pastas
+
+Dentre os arquivos e pastas presentes na raiz do projeto (cap6/), definem-se:
 
 ```
 cap6/
-├── main.py            # Menu CLI e orquestração (Cap. 4: lista de dicts)
-├── funcoes.py         # Validação, cálculo, classificação, exibição (Caps. 3 e 4)
-├── arquivos.py        # JSON (backup) e TXT (relatório) — Cap. 5
-├── banco.py           # CRUD Oracle e sincronização — Cap. 6
-├── requirements.txt   # Dependências (oracledb)
-└── README.md          # Este arquivo
+┬
+├── assets
+│   └── logo-fiap.png       # Logo da FIAP para README
+├── config
+│   ├── requirements.txt    # Dependências (oracledb)
+│   └── setup.py            # Assistente de configuração
+├── output
+│   └── relatório.txt       # Arquivo de relatório (TXT)
+├── src
+│   ├── backup_talhoes.json # Arquivo de backup (JSON) — Cap. 5
+│   ├── arquivos.py         # JSON (backup) e TXT (relatório) — Cap. 5
+│   ├── banco.py            # CRUD Oracle e sincronização — Cap. 6
+│   └── funcoes.py          # Validação, cálculo, classificação, exibição (Caps. 3 e 4)
+├── main.py                 # Menu CLI e orquestração (Cap. 4: lista de dicts)
+└── README.md               # Arquivo de documentação
 ```
 
-## 7. Como Executar
+## 🔧 Como executar o código
 
-```bash
-# 1. Entre no diretório do projeto
-cd fiap-inteligencia-artificial/SEM1/FASE2/cap6
-
-# 2. Crie o ambiente virtual
-python3 -m venv .venv           # macOS / Linux
-python -m venv .venv            # Windows
-
-# 3. Ative o ambiente virtual (já existe em .venv/)
-source .venv/bin/activate       # macOS / Linux
-.venv\Scripts\activate          # Windows
-
-# 4. Instale dependências (oracledb já deve estar instalado)
-pip install -r requirements.txt
-
-# 5. Execute
-python3 main.py                 # macOS / Linux
-python main.py                  # Windows
+Primeiramente, rode o arquivo de setup
+```
+python /config/setup.py # Windows
+python3 /config/setup.py # Linux
+```
+Uma vez configurado, execute main.py
+```
+python /main.py # Windows
+python3 /main.py # Linux
 ```
 
-Se não houver rede para o Oracle da FIAP, o programa segue em **modo offline** — só as opções 8 e 9 (sincronização) ficam bloqueadas; todas as demais funcionam normalmente.
 
-## 8. Tabela Oracle
+## 🗃 Histórico de lançamentos
 
-Criada automaticamente na primeira execução pelo `banco.garantir_tabela()`:
+* 0.1.0 - 21/04/2026
 
-```sql
-CREATE TABLE talhoes (
-    id                   NUMBER GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
-    nome                 VARCHAR2(100) NOT NULL,
-    area_ha              NUMBER(10,2)  NOT NULL,
-    tipo_colheita        VARCHAR2(10)  NOT NULL,
-    producao_esperada_t  NUMBER(10,2)  NOT NULL,
-    producao_colhida_t   NUMBER(10,2)  NOT NULL,
-    safra                VARCHAR2(20)
-);
-```
+## 📋 Licença
 
-## 9. Menu
+<img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/cc.svg?ref=chooser-v1"><img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/by.svg?ref=chooser-v1"><p xmlns:cc="http://creativecommons.org/ns#" xmlns:dct="http://purl.org/dc/terms/"><a property="dct:title" rel="cc:attributionURL" href="https://github.com/agodoi/template">MODELO GIT FIAP</a> por <a rel="cc:attributionURL dct:creator" property="cc:attributionName" href="https://fiap.com.br">Fiap</a> está licenciado sobre <a href="http://creativecommons.org/licenses/by/4.0/?ref=chooser-v1" target="_blank" rel="license noopener noreferrer" style="display:inline-block;">Attribution 4.0 International</a>.</p>
 
-```
-1 - Cadastrar talhão
-2 - Listar talhões / Dashboard
-3 - Editar talhão
-4 - Excluir talhão
-5 - Exportar relatório TXT
-6 - Salvar backup JSON
-7 - Carregar backup JSON
-8 - Sincronizar: memória -> Oracle
-9 - Sincronizar: Oracle -> memória
-0 - Sair
-```
 
