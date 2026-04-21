@@ -17,7 +17,7 @@ bloqueadas. Todas as demais continuam funcionando.
 import os
 
 # Importamos apenas o que vamos usar, com nomes explícitos para legibilidade.
-from funcoes import (
+from src.funcoes import (
     ler_str_nao_vazio,
     ler_float_positivo,
     ler_opcao_menu,
@@ -26,14 +26,15 @@ from funcoes import (
     recalcular_talhao,
     exibir_dashboard,
 )
-from arquivos import (
+from src.arquivos import (
     salvar_backup_json,
     carregar_backup_json,
     exportar_relatorio_txt,
 )
+
 # O módulo banco inteiro é importado com alias para deixar claro quando
 # estamos tocando o banco vs. a lógica local.
-import banco
+from src import banco
 
 
 # ---------------------------------------------------------------------------
@@ -63,14 +64,16 @@ def mostrar_menu(conn_ativa):
     print("=" * 60)
     # Sufixo que aparece nas opções 8 e 9 quando não há conexão.
     sufixo_oracle = "" if conn_ativa else "  [indisponível - sem conexão Oracle]"
-    print("""
+    print(
+        """
   1 - Cadastrar talhão
   2 - Listar talhões / Dashboard
   3 - Editar talhão
   4 - Excluir talhão
   5 - Exportar relatório TXT
   6 - Salvar backup JSON
-  7 - Carregar backup JSON""")
+  7 - Carregar backup JSON"""
+    )
     # As duas opções de Oracle são impressas com o sufixo indicativo.
     print(f"  8 - Sincronizar: memória -> Oracle{sufixo_oracle}")
     print(f"  9 - Sincronizar: Oracle -> memória{sufixo_oracle}")
@@ -107,8 +110,10 @@ def acao_cadastrar(talhoes, proximo_id_local):
     )
     # Adiciona à lista em memória (nossa "tabela" — Cap. 4).
     talhoes.append(novo)
-    print(f"\n  [OK] Talhão '{nome}' cadastrado com id_local L{proximo_id_local} "
-          f"(perda: {novo['perda_pct']:.2f}% - {novo['classificacao']}).")
+    print(
+        f"\n  [OK] Talhão '{nome}' cadastrado com id_local L{proximo_id_local} "
+        f"(perda: {novo['perda_pct']:.2f}% - {novo['classificacao']})."
+    )
     # Próximo id é o atual + 1.
     return proximo_id_local + 1
 
@@ -130,7 +135,8 @@ def _selecionar_talhao(talhoes):
     print()
     id_local = ler_opcao_menu(
         f"  Digite o id_local (1..{len(talhoes)}) do talhão: ",
-        1, max(t["id_local"] or 0 for t in talhoes)
+        1,
+        max(t["id_local"] or 0 for t in talhoes),
     )
     # Busca o índice na lista correspondente ao id_local escolhido.
     for indice, t in enumerate(talhoes):
@@ -151,7 +157,9 @@ def acao_editar(talhoes, conn):
 
     # Pega referência ao dict escolhido.
     talhao = talhoes[indice]
-    print(f"\n  Editando '{talhao['nome']}' — deixe em branco para manter o valor atual.\n")
+    print(
+        f"\n  Editando '{talhao['nome']}' — deixe em branco para manter o valor atual.\n"
+    )
 
     # Para cada campo editável, perguntamos; entrada vazia mantém o valor antigo.
     # (Aqui usamos input direto porque precisamos detectar "vazio" — as funções
@@ -161,17 +169,27 @@ def acao_editar(talhoes, conn):
     texto_area = input(f"  Área ha [{talhao['area_ha']}]: ").strip().replace(",", ".")
     nova_area = float(texto_area) if texto_area else talhao["area_ha"]
 
-    novo_tipo = input(f"  Tipo [{talhao['tipo_colheita']}] (manual/mecanica): ").strip().lower()
+    novo_tipo = (
+        input(f"  Tipo [{talhao['tipo_colheita']}] (manual/mecanica): ").strip().lower()
+    )
     novo_tipo = novo_tipo.replace("â", "a") or talhao["tipo_colheita"]
     # Se digitou algo inválido, mantém o valor antigo para não corromper dado.
     if novo_tipo not in {"manual", "mecanica"}:
         print(f"  [!] Tipo inválido; mantendo '{talhao['tipo_colheita']}'.")
         novo_tipo = talhao["tipo_colheita"]
 
-    texto_esp = input(f"  Produção esperada t [{talhao['producao_esperada_t']}]: ").strip().replace(",", ".")
+    texto_esp = (
+        input(f"  Produção esperada t [{talhao['producao_esperada_t']}]: ")
+        .strip()
+        .replace(",", ".")
+    )
     nova_esp = float(texto_esp) if texto_esp else talhao["producao_esperada_t"]
 
-    texto_col = input(f"  Produção colhida t [{talhao['producao_colhida_t']}]: ").strip().replace(",", ".")
+    texto_col = (
+        input(f"  Produção colhida t [{talhao['producao_colhida_t']}]: ")
+        .strip()
+        .replace(",", ".")
+    )
     nova_col = float(texto_col) if texto_col else talhao["producao_colhida_t"]
 
     nova_safra = input(f"  Safra [{talhao['safra']}]: ").strip() or talhao["safra"]
@@ -191,7 +209,9 @@ def acao_editar(talhoes, conn):
     if talhao.get("id_oracle") is not None and conn is not None:
         try:
             afetadas = banco.atualizar_talhao(conn, talhao["id_oracle"], talhao)
-            print(f"\n  [OK] Alterações salvas (memória + Oracle, {afetadas} linha afetada).")
+            print(
+                f"\n  [OK] Alterações salvas (memória + Oracle, {afetadas} linha afetada)."
+            )
         except Exception as erro:
             # Se falhou o UPDATE no Oracle, avisa mas mantém a edição em memória.
             print(f"\n  [!] Editado em memória, mas falhou no Oracle: {erro}")
