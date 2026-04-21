@@ -12,8 +12,8 @@
 - <a href="https://www.linkedin.com/in/willian-batista-de-oliveira-silva/">Willian Batista De Oliveira Silva</a>
 - <a href="https://www.linkedin.com/in/danielcorrea-printerx/">Daniel Corrêa</a>
 - <a href="https://www.linkedin.com/in/kaique-s-16ba47206/">Kaique Savi</a>
-- <a href="https://www.linkedin.com/in/pedro-henrique-do-nascimento-b86083348">Pedro Henrique do Nascimento Souza</a> 
-- <a href="https://www.linkedin.com/visnowden">Vinícius Camargo</a>
+- <a href="https://www.linkedin.com/in/pedro-henrique-do-nascimento-b86083348">Pedro Henrique do Nascimento</a> 
+- <a href="https://www.linkedin.com/in/visnowden">Vinícius Camargo</a>
 
 ## 📜 Descrição
 
