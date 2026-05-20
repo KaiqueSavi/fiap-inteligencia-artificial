@@ -188,33 +188,69 @@ O LED vermelho acende quando:
 - **Intervalo de leitura:** Status exibido a cada 2 segundos
 - **Feedback dos botoes:** Cada toggle de nutriente gera uma mensagem no Serial
 
-### Exemplo de saida do Monitor Serial
+### Formato de saida (CSV)
+
+A partir desta versao a saida do Monitor Serial e CSV puro, pronto para ser importado em Excel, Google Sheets ou Pandas. As linhas iniciadas com `#` sao comentarios/eventos e devem ser ignoradas no import.
+
+**Cabecalho:**
 
 ```
-===========================================
-  FarmTech Solutions - Irrigacao Inteligente
-  Cultura: Tomate
-===========================================
-
-Comandos via Serial:
-  'C' -> Ativar previsao de chuva
-  'S' -> Desativar previsao de chuva (sol)
-
-Botoes NPK: clique para alternar ON/OFF
-
--------------------------------------------
-         LEITURA DOS SENSORES
--------------------------------------------
-  Nitrogenio (N): PRESENTE [ON]
-  Fosforo    (P): PRESENTE [ON]
-  Potassio   (K): AUSENTE  [OFF]
-  Nutrientes OK:  2/3
-  pH do Solo:     6.3 (ideal: 5.5 - 7.0)
-  Umidade Solo:   45.0% (ideal: 60% - 80%)
--------------------------------------------
-  >> BOMBA D'AGUA: *** LIGADA ***
--------------------------------------------
+timestamp_ms,umidade,ph,N,P,K,nutrientes,chuva,bomba,alerta
 ```
+
+**Colunas:**
+
+| Coluna | Tipo | Descricao |
+|---|---|---|
+| `timestamp_ms` | int | `millis()` desde o boot do ESP32 |
+| `umidade` | float (1 casa) | Umidade do solo em % (DHT22) |
+| `ph` | float (2 casas) | pH do solo mapeado a partir do LDR (0.0 - 14.0) |
+| `N` | 0/1 | Nitrogenio presente |
+| `P` | 0/1 | Fosforo presente |
+| `K` | 0/1 | Potassio presente |
+| `nutrientes` | int | Contagem de N+P+K presentes (0-3) |
+| `chuva` | 0/1 | Previsao de chuva ativa |
+| `bomba` | 0/1 | Bomba d'agua ligada |
+| `alerta` | 0/1 | LED vermelho aceso (pH fora ou nutrientes < 2) |
+
+**Exemplo de saida real:**
+
+```
+# FarmTech Solutions - Irrigacao Inteligente (Tomate)
+# Comandos Serial: 'C' = chuva ON | 'S' = chuva OFF
+# Botoes NPK: clique para alternar ON/OFF
+# Linhas iniciadas com '#' sao comentarios (ignorar no import CSV)
+timestamp_ms,umidade,ph,N,P,K,nutrientes,chuva,bomba,alerta
+2014,45.0,6.30,1,1,0,2,0,1,0
+4016,45.0,6.30,1,1,0,2,0,1,0
+# evento: Potassio (K)=1
+6018,72.0,6.30,1,1,1,3,0,0,0
+# evento: previsao_chuva=1
+8020,45.0,6.30,1,1,1,3,1,0,0
+```
+
+### Como baixar o CSV das saidas
+
+#### Wokwi Online
+1. Inicie a simulacao em [wokwi.com/projects/459600919819279361](https://wokwi.com/projects/459600919819279361).
+2. Deixe a simulacao rodando pelo tempo desejado e interaja com botoes/comandos.
+3. No painel **Serial Monitor**, clique no icone de **download** (seta para baixo) para salvar o log completo como `.txt`.
+4. Renomeie o arquivo para `.csv` e abra no Excel/Sheets/Pandas. No Pandas, use:
+
+```python
+import pandas as pd
+df = pd.read_csv("saida.csv", comment="#")
+```
+
+#### Wokwi no VS Code / PlatformIO
+1. Compile o projeto: `pio run`.
+2. Inicie o monitor serial redirecionando a saida para arquivo:
+
+```bash
+pio device monitor --baud 115200 | tee saida.csv
+```
+
+3. Quando quiser parar, pressione `Ctrl+C`. O arquivo `saida.csv` ja estara pronto para importacao.
 
 ---
 
